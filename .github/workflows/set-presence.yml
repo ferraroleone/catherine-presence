@@ -15,5 +15,5 @@ jobs:
           USER_ID: ${{ secrets.USER_ID }}
         run: |
           TOKEN=$(curl -s -X POST "https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token" -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&scope=https://graph.microsoft.com/.default" | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
-          HTTP=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://graph.microsoft.com/v1.0/users/${USER_ID}/presence/setPresence" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d '{"sessionId":"CatherinePresence","availability":"Available","activity":"Available","expirationDuration":"PT4H"}')
+          HTTP=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://graph.microsoft.com/v1.0/users/${USER_ID}/presence/setPresence" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "{\"sessionId\":\"${CLIENT_ID}\",\"availability\":\"Available\",\"activity\":\"Available\",\"expirationDuration\":\"PT4H\"}")
           if [ "$HTTP" = "200" ] || [ "$HTTP" = "204" ]; then echo "OK (HTTP $HTTP)"; else echo "Erro HTTP $HTTP"; exit 1; fi
